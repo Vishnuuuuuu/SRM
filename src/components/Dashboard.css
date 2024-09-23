@@ -1,0 +1,160 @@
+
+  /* Container for the dashboard */
+  .dashboard-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+  }
+  
+  /* Dropdowns */
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+ /* Calendar styling */
+.react-calendar {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 10px;
+    text-align: center; /* Center the calendar content */
+  }
+  
+  /* Center the calendar container on the screen */
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Calendar header styling */
+  .react-calendar__navigation button {
+    color: white;
+    background-color: #ff9800; /* Orange background */
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .react-calendar__navigation button:hover {
+    background-color: #e68a00; /* Darker orange on hover */
+  }
+  
+  /* Styling for the active calendar date */
+  .react-calendar__tile--active {
+    background: #ff9800; /* Orange background for selected date */
+    color: white;
+  }
+  
+  /* Styling for calendar dates */
+  .react-calendar__tile {
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .react-calendar__tile:hover {
+    background-color: #ff9800; /* Orange hover for calendar dates */
+    color: white;
+  }
+  
+  /* Styling for other month dates */
+  .react-calendar__tile--now {
+    background-color: #fff5e6; /* Light orange for current date */
+    color: #ff9800; /* Orange text for current date */
+  }
+  
+  /* Mobile Styles */
+  @media only screen and (max-width: 600px) {
+    .react-calendar {
+      width: 100%;
+      max-width: 250px;
+    }
+  
+    .dashboard-container {
+      padding: 10px;
+    }
+  }
+  
+  /* Header */
+  h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Summary sections */
+  .vehicle-summary,
+  .driver-summary {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Summary title */
+  .vehicle-summary h2,
+  .driver-summary h2 {
+    font-size: 1.5rem;
+    color: #1976d2;
+    margin-bottom: 10px;
+  }
+  
+  /* Summary data */
+  .vehicle-summary p,
+  .driver-summary p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Mobile Styles */
+  @media only screen and (max-width: 600px) {
+    .dashboard-container {
+      padding: 10px;
+    }
+  
+    h1 {
+      font-size: 1.5rem;
+    }
+  
+    select {
+      font-size: 0.9rem;
+    }
+  
+    .vehicle-summary h2,
+    .driver-summary h2 {
+      font-size: 1.3rem;
+    }
+  
+    .vehicle-summary p,
+    .driver-summary p {
+      font-size: 0.9rem;
+    }
+  
+    .react-calendar {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+  

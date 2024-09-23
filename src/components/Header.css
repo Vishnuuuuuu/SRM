@@ -1,0 +1,63 @@
+/* Style the header */
+.header {
+    background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Gradient background */
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  }
+  
+  /* Style the nav menu */
+  .nav .menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav .menu li {
+    margin-left: 1.5rem;
+  }
+  
+  .nav .menu-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.2rem;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    position: relative;
+  }
+  
+  /* Add hover effect */
+  .nav .menu-link:hover {
+    color: #000;
+    border-bottom: 2px solid #000; /* Underline on hover */
+  }
+  
+  /* Style the active link */
+  .active-link {
+    color: #000;
+    font-weight: bold;
+    border-bottom: 2px solid #000; /* Visual indicator for active page */
+  }
+  
+  /* Mobile View */
+  @media only screen and (max-width: 768px) {
+    .header {
+      padding: 1rem;
+    }
+  
+    .nav .menu {
+      flex-direction: row; /* Ensure horizontal layout */
+    }
+  
+    .nav .menu li {
+      margin-left: 0.8rem;
+    }
+  
+    .nav .menu-link {
+      font-size: 1rem;
+    }
+  }
+  
