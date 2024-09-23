@@ -11,7 +11,7 @@ const Admin = () => {
   // Fetch all vehicles for the dropdown
   const fetchVehicles = async () => {
     try {
-      const response = await fetch('http://localhost:5000/get-vehicles');
+      const response = await fetch('https://probable-aged-leather.glitch.me/get-vehicles');
       const data = await response.json();
       setVehicles(data);
     } catch (error) {
@@ -22,7 +22,7 @@ const Admin = () => {
   // Fetch all drivers for the dropdown
   const fetchDrivers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/get-drivers');
+      const response = await fetch('https://probable-aged-leather.glitch.me/get-drivers');
       const data = await response.json();
       setDrivers(data);
     } catch (error) {
