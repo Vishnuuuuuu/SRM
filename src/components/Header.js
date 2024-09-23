@@ -6,6 +6,7 @@ const Header = () => {
   return (
     <header className="header">
       <nav className="nav">
+        <h1> SRK Travles </h1>
         <ul className="menu">
           <li>
             <NavLink 
