@@ -5,11 +5,14 @@ const DailyUpdate = () => {
   const [vehicles, setVehicles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [fromPoints, setFromPoints] = useState([]); // New state for 'from' points
+  const [toPoints, setToPoints] = useState([]); // New state for 'to' points
+
   const [selectedVehicle, setSelectedVehicle] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedDriver, setSelectedDriver] = useState('');  // New driver state
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
+  const [selectedDriver, setSelectedDriver] = useState(''); 
+  const [selectedFrom, setSelectedFrom] = useState(''); // New state for selected 'from' point
+  const [selectedTo, setSelectedTo] = useState(''); // New state for selected 'to' point
 
   // Date state to display the current date
   const [currentDate, setCurrentDate] = useState('');
@@ -26,7 +29,7 @@ const DailyUpdate = () => {
   const [showMaintenance, setShowMaintenance] = useState(false);
   const [maintenanceAmount, setMaintenanceAmount] = useState('');
 
-  // Fetch vehicles, categories, and drivers
+  // Fetch vehicles, categories, drivers, from points, and to points
   useEffect(() => {
     fetch('https://probable-aged-leather.glitch.me/get-vehicles')
       .then((response) => response.json())
@@ -43,97 +46,125 @@ const DailyUpdate = () => {
       .then((data) => setDrivers(data))
       .catch((error) => console.error('Error fetching drivers:', error));
 
+    fetch('https://probable-aged-leather.glitch.me/get-from-points')
+      .then((response) => response.json())
+      .then((data) => setFromPoints(data))
+      .catch((error) => console.error('Error fetching from points:', error));
+
+    fetch('https://probable-aged-leather.glitch.me/get-to-points')
+      .then((response) => response.json())
+      .then((data) => setToPoints(data))
+      .catch((error) => console.error('Error fetching to points:', error));
+
     // Set current date when the component is mounted
     const today = new Date().toLocaleDateString();
     setCurrentDate(today);
   }, []);
 
-  // Submit logic with validation for mandatory fields
-const handleSubmit = async () => {
-  // Validation
-  if (!selectedVehicle) {
-    alert('Please select a vehicle.');
-    return;
-  }
-  if (!selectedCategory) {
-    alert('Please select a category.');
-    return;
-  }
-  if (!selectedDriver) {
-    alert('Please select a driver.');
-    return;
-  }
-  if (!from) {
-    alert('Please fill the "From" field.');
-    return;
-  }
-  if (!to) {
-    alert('Please fill the "To" field.');
-    return;
-  }
-  if (showAdvance && !advanceAmount) {
-    alert('Please fill the advance amount.');
-    return;
-  }
-  if (showDiesel && !dieselAmount) {
-    alert('Please fill the diesel amount.');
-    return;
-  }
-  if (showMaintenance && !maintenanceAmount) {
-    alert('Please fill the maintenance amount.');
-    return;
-  }
-
-  // Format current date
-  const currentDate = new Date().toLocaleDateString();
-
-  // Prepare vehicle summary data, include driver's name
-  const vehicleSummaryData = {
-    selectedVehicle,
-    from,
-    to,
-    dieselAmount: showDiesel ? dieselAmount : 0, // Storing diesel amount
-    maintenanceAmount: showMaintenance ? maintenanceAmount : 0, // Storing maintenance amount
-    date: currentDate,  // Add the current date to the form data
-    driverName: selectedDriver,  // Include driver's name in the vehicle summary data
+  const handleSubmit = async () => {
+    // Validation
+    if (!selectedVehicle) {
+      alert('Please select a vehicle.');
+      return;
+    }
+    if (!selectedCategory) {
+      alert('Please select a category.');
+      return;
+    }
+    if (!selectedDriver) {
+      alert('Please select a driver.');
+      return;
+    }
+    if (!selectedFrom) {
+      alert('Please select a "From" point.');
+      return;
+    }
+    if (!selectedTo) {
+      alert('Please select a "To" point.');
+      return;
+    }
+    if (showAdvance && !advanceAmount) {
+      alert('Please fill the advance amount.');
+      return;
+    }
+    if (showDiesel && !dieselAmount) {
+      alert('Please fill the diesel amount.');
+      return;
+    }
+    if (showMaintenance && !maintenanceAmount) {
+      alert('Please fill the maintenance amount.');
+      return;
+    }
+  
+    // Format current date
+    const currentDate = new Date().toLocaleDateString();
+  
+    // Prepare vehicle summary data
+    const vehicleSummaryData = {
+      selectedVehicle,
+      from: selectedFrom,
+      to: selectedTo,
+      dieselAmount: showDiesel ? dieselAmount : 0,
+      maintenanceAmount: showMaintenance ? maintenanceAmount : 0,
+      date: currentDate,
+      driverName: selectedDriver,
+    };
+  
+    const driverSummaryData = {
+      selectedDriver,
+      advanceAmount: showAdvance ? advanceAmount : 0,
+      date: currentDate,
+    };
+  
+    // Prepare From-to-summary data
+    const fromToSummaryData = {
+      selectedVehicle,
+      selectedDriver,
+      from: selectedFrom,
+      to: selectedTo,
+      date: currentDate,
+    };
+  
+    try {
+      // Submit vehicle summary
+      const vehicleResponse = await fetch('https://probable-aged-leather.glitch.me/submit-vehicle-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(vehicleSummaryData),
+      });
+      const vehicleResult = await vehicleResponse.json();
+      console.log('Vehicle Summary:', vehicleResult);
+  
+      // Submit driver summary
+      const driverResponse = await fetch('https://probable-aged-leather.glitch.me/submit-driver-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(driverSummaryData),
+      });
+      const driverResult = await driverResponse.json();
+      console.log('Driver Summary:', driverResult);
+  
+      // Submit from-to-summary
+      const fromToResponse = await fetch('https://probable-aged-leather.glitch.me/submit-from-to-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fromToSummaryData),
+      });
+      const fromToResult = await fromToResponse.json();
+      console.log('From-to Summary:', fromToResult);
+  
+      alert('Data submitted successfully.');
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      alert('Error submitting data. Please try again.');
+    }
   };
-
-  const driverSummaryData = {
-    selectedDriver,
-    advanceAmount: showAdvance ? advanceAmount : 0,  // Store 0 if no advance
-    date: currentDate,  // Add the current date to the form data
-  };
-
-  try {
-    // Submit vehicle summary
-    const vehicleResponse = await fetch('https://probable-aged-leather.glitch.me/submit-vehicle-summary', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(vehicleSummaryData),
-    });
-    const vehicleResult = await vehicleResponse.json();
-    console.log('Vehicle Summary:', vehicleResult);
-
-    // Submit driver summary
-    const driverResponse = await fetch('https://probable-aged-leather.glitch.me/submit-driver-summary', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(driverSummaryData),
-    });
-    const driverResult = await driverResponse.json();
-    console.log('Driver Summary:', driverResult);
-
-    alert('Data submitted successfully.');
-  } catch (error) {
-    console.error('Error submitting data:', error);
-    alert('Error submitting data. Please try again.');
-  }
-};
-
   
   return (
     <div className="daily-update-container">
@@ -168,12 +199,23 @@ const handleSubmit = async () => {
         ))}
       </select>
 
-      {/* From and To Text Boxes */}
-      <label htmlFor="from">From:</label>
-      <input type="text" id="from" value={from} onChange={(e) => setFrom(e.target.value)} />
+      {/* From Dropdown */}
+      <label htmlFor="from-dropdown">Select a From Point:</label>
+      <select id="from-dropdown" value={selectedFrom} onChange={(e) => setSelectedFrom(e.target.value)}>
+        <option value="">-- Select a From Point --</option>
+        {fromPoints.map((point) => (
+          <option key={point._id} value={point.pointName}>{point.pointName}</option>
+        ))}
+      </select>
 
-      <label htmlFor="to">To:</label>
-      <input type="text" id="to" value={to} onChange={(e) => setTo(e.target.value)} />
+      {/* To Dropdown */}
+      <label htmlFor="to-dropdown">Select a To Point:</label>
+      <select id="to-dropdown" value={selectedTo} onChange={(e) => setSelectedTo(e.target.value)}>
+        <option value="">-- Select a To Point --</option>
+        {toPoints.map((point) => (
+          <option key={point._id} value={point.pointName}>{point.pointName}</option>
+        ))}
+      </select>
 
       {/* Driver's Advance Card */}
       <div>
