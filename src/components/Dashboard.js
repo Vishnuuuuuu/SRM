@@ -1,8 +1,10 @@
 import { jsPDF } from 'jspdf'; // Import jsPDF library
+import 'jspdf-autotable'; // Import the autoTable plugin
 import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Dashboard.css';
+
 
 const Dashboard = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -136,37 +138,79 @@ const Dashboard = () => {
   const totalDriverAdvance = calculateDriverAdvance();
 
   // Function to generate PDF for vehicle summary
-  const downloadVehicleSummary = () => {
-    const doc = new jsPDF();
-    doc.text(`Vehicle Summary for ${selectedVehicle}`, 10, 10);
-    doc.text(`Total Maintenance: ₹${totalMaintenance}`, 10, 20);
-    doc.text(`Total Diesel: ${totalDiesel} L`, 10, 30);
-    vehicleData.trips.forEach((trip, index) => {
-      doc.text(`${trip.date}: From ${trip.from} to ${trip.to}, Driver: ${trip.driverName}, Diesel: ${trip.dieselAmount}L, Maintenance: ₹${trip.maintenanceAmount}`, 10, 40 + index * 10);
-    });
-    doc.save(`${selectedVehicle}.pdf`);
-  };
+const downloadVehicleSummary = () => {
+  const doc = new jsPDF();
+  doc.text(`Vehicle Summary for ${selectedVehicle}`, 10, 10);
+  doc.text(`Total Maintenance: ₹${totalMaintenance.toLocaleString('en-IN')}`, 10, 20);
+  doc.text(`Total Diesel: ${totalDiesel} L`, 10, 30);
+
+  // Table headers
+  const headers = ["Date", "From", "To", "Driver", "Diesel (L)", "Maintenance (₹)"];
+  const rows = vehicleData.trips.map((trip) => [
+    trip.date,
+    trip.from,
+    trip.to,
+    trip.driverName,
+    trip.dieselAmount,
+    trip.maintenanceAmount
+  ]);
+
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: 40
+  });
+
+  doc.save(`${selectedVehicle}-summary.pdf`);
+};
+
+// Function to generate PDF for From-To summary
+const downloadFromToSummary = () => {
+  const doc = new jsPDF();
+  doc.text(`From-To Summary for ${selectedFrom} to ${selectedTo}`, 10, 10);
+
+  // Table headers
+  const headers = ["Date", "Vehicle", "Driver"];
+  const rows = fromToData.map((item) => [
+    item.date,
+    item.vehicleNumber,
+    item.driverName
+  ]);
+
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: 20
+  });
+
+  doc.save(`${selectedFrom}-${selectedTo}-summary.pdf`);
+};
 
   // Function to generate PDF for driver summary
-  const downloadDriverSummary = () => {
-    const doc = new jsPDF();
-    doc.text(`Driver Summary for ${selectedDriver}`, 10, 10);
-    doc.text(`Total Advance: ₹${totalDriverAdvance}`, 10, 20);
-    driverData.advances.forEach((advance, index) => {
-      doc.text(`${advance.date}: Advance Amount: ₹${advance.advanceAmount}`, 10, 30 + index * 10);
-    });
-    doc.save(`${selectedDriver}.pdf`);
-  };
+const downloadDriverSummary = () => {
+  const doc = new jsPDF();
+  doc.text(`Driver Summary for ${selectedDriver}`, 10, 10);
+  doc.text(`Total Advance: ₹${totalDriverAdvance.toLocaleString('en-IN')}`, 10, 20);
 
-  // Function to generate PDF for From-To summary
-  const downloadFromToSummary = () => {
-    const doc = new jsPDF();
-    doc.text(`From-To Summary for ${selectedFrom} to ${selectedTo}`, 10, 10);
-    fromToData.forEach((item, index) => {
-      doc.text(`Date: ${item.date}, Vehicle: ${item.vehicleNumber}, Driver: ${item.driverName}`, 10, 20 + index * 10);
-    });
-    doc.save(`${selectedFrom}-${selectedTo}.pdf`);
-  };
+  // Table headers
+  const headers = [["Date", "Advance (₹)"]];
+  const rows = driverData.advances.map((advance) => [
+    advance.date,
+    advance.advanceAmount.toLocaleString('en-IN'),
+  ]);
+
+  // Generate table
+  doc.autoTable({
+    head: headers,
+    body: rows,
+    startY: 30, // Start the table below the text
+  });
+
+  // Save the PDF
+  doc.save(`${selectedDriver}-summary.pdf`);
+};
+
+  
 
   // Auto deselect driver and vehicle when selecting from and to
   const handleFromToSelection = (type, value) => {
