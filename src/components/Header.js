@@ -29,6 +29,22 @@ const Header = () => {
               Admin
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/upload-file"
+              className={({ isActive }) => (isActive ? 'active-link' : 'menu-link')}
+            >
+              Upload File
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/Files"
+              className={({ isActive }) => (isActive ? 'active-link' : 'menu-link')}
+            >
+               Files
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>
